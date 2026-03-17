@@ -1,0 +1,46 @@
+services:
+  postgres:
+    build:
+      context: ./docker/postgres
+    container_name: sqltutorial
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_HOST_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - my-db-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin-container
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_LISTEN_ADDRESS: 0.0.0.0
+    ports:
+      - "${PGADMIN_HOST_PORT}:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - my-db-network
+    volumes:
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json
+
+networks:
+  my-db-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

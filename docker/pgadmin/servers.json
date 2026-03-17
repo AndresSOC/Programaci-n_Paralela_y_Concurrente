@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "PostgreSQL",
+      "Group": "Servers",
+      "Host": "sqltutorial",
+      "Port": 5432,
+      "Username": "app_user",
+      "MaintenanceDB": "app_db",
+      "SSLMode": "prefer"
+    }
+  }
+}
