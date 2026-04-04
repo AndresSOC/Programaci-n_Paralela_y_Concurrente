@@ -10,3 +10,5 @@ openpyxl==3.1.2
 #Conexión con python
 psycopg2==2.9.11
 SQLAlchemy==2.0.48
+
+playwright==1.58.0
